@@ -19,15 +19,47 @@ export default class Todo extends Component{
     }
 
     handleAdd(){
-        var config = {
+        /*var config = {
             headers: {
                 'Access-Control-Allow-Origin': '*',
-                'Accept':'application/json',
-                'Authorization':'Bearer  eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImNyZWF0ZWQiOjE1MzEzMzc5NTc3NTcsImV4cCI6MTUzMTk0Mjc1N30.JjHIYp_caex3vr9F22GdF2UJJmNCu33ly_lqXgMk5qSg5UWwcZ2O33FTY4E43hD3IMSEBIvO_aSzVVImGfuRiw' 
+                'Content-Type':'application/json',
+                'authorization':'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImNyZWF0ZWQiOjE1MzE3NjQ1NDg4ODAsImV4cCI6MTUzMjM2OTM0OH0.4XqtCLdrFZr1Z2oswhXycGLDknw2pcuH7eoNfBVg8QuzvpONXPmqYvQc2RAq72dned1DedoGi1wZV25UcE6nIA' 
             }
         };
         axios.get(URL,{config})
-            .then(resp => console.log("Funcionou!"));
+            .then(resp => console.log("Funcionou!"));*/
+
+        
+        /*let data = {
+            description: description
+        }
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImNyZWF0ZWQiOjE1MzE3NjQ1NDg4ODAsImV4cCI6MTUzMjM2OTM0OH0.4XqtCLdrFZr1Z2oswhXycGLDknw2pcuH7eoNfBVg8QuzvpONXPmqYvQc2RAq72dned1DedoGi1wZV25UcE6nIA");
+        let fetchData = { 
+            method: 'GET', 
+            body: data,
+            headers: myHeaders
+        }
+        
+        fetch(URL,fetchData)
+        .then((resp) => resp.json())
+        .catch(function(data) {
+            console.log("Erro! "+data);
+        });*/
+
+
+        fetch(URL, {
+            method: 'GET',
+            headers: new Headers({
+              'Content-Type': 'application/json',
+              'authorization':'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImNyZWF0ZWQiOjE1MzE3NjQ1NDg4ODAsImV4cCI6MTUzMjM2OTM0OH0.4XqtCLdrFZr1Z2oswhXycGLDknw2pcuH7eoNfBVg8QuzvpONXPmqYvQc2RAq72dned1DedoGi1wZV25UcE6nIA'
+            })
+          }).then(function(response) {
+            console.log(response);
+          });
+        
     }
 
     render(){
