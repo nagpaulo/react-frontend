@@ -19,20 +19,14 @@ export default class Todo extends Component{
     }
 
     handleAdd(){
-        const description = this.state.description;
         var config = {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Accept':'application/json',
                 'Authorization':'Bearer  eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImNyZWF0ZWQiOjE1MzEzMzc5NTc3NTcsImV4cCI6MTUzMTk0Mjc1N30.JjHIYp_caex3vr9F22GdF2UJJmNCu33ly_lqXgMk5qSg5UWwcZ2O33FTY4E43hD3IMSEBIvO_aSzVVImGfuRiw' 
             }
-            
-
         };
-        axios.defaults.baseURL = URL;
-        axios.defaults.headers.common['Authorization'] = 'Bearer  eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImNyZWF0ZWQiOjE1MzEzMzc5NTc3NTcsImV4cCI6MTUzMTk0Mjc1N30.JjHIYp_caex3vr9F22GdF2UJJmNCu33ly_lqXgMk5qSg5UWwcZ2O33FTY4E43hD3IMSEBIvO_aSzVVImGfuRiw';
-        axios.defaults.headers.get['Accept'] = 'application/json';
-        axios.get()
+        axios.get(URL,{config})
             .then(resp => console.log("Funcionou!"));
     }
 
