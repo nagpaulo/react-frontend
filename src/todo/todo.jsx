@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import axios from 'axios'; 
 
 import PageHeader from '../template/pageHeader';
+import Pagination from '../template/pagination';
 import TodoForm from '../todo/todoForm';
 import TodoList from '../todo/todoList';
 
-const URL = "http://localhost:8080/api/todo/listar";
+const URL = "http://localhost:8080/api/todo";
+const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImNyZWF0ZWQiOjE1MzE5MzMyNjExNzEsImV4cCI6MTUzMjUzODA2MX0.lz9ohlBk_xPYdUbDhUyLGQfjL_ZYYGOcXtiCHL4j3TlYVr2_I16XVOcoQW32NcY_Wq8GvSZi47rzs_nfUO_dvw";
 
 export default class Todo extends Component{
     constructor(props){
@@ -13,53 +15,44 @@ export default class Todo extends Component{
         this.state = { description: '', list: []}
         this.handleChange = this.handleChange.bind(this);
         this.handleAdd = this.handleAdd.bind(this);
+        this.handleRemove=this.handleRemove.bind(this);
+
+        this.refresh();
     }
+
+    refresh(){
+        axios.get(`${URL}/listar?sort=-toDo`)
+            .then((resp) => this.setState({...this.state, description: '', list: resp.data.data.content}));
+    }
+
+    handleRemove(todo){
+        axios.delete(`${URL}/${todo.id}`)
+            .then(resp => this.refresh());
+    }
+
     handleChange(e){
         this.setState({...this.state, description: e.target.value})
     }
 
     handleAdd(){
-        /*var config = {
+        var body = {
+            toDo: this.state.description,
+            done: false,
+            access: token
+         }
+        let axiosConfig = {
             headers: {
+                'async': true,
+                'crossDomain': true,
                 'Access-Control-Allow-Origin': '*',
                 'Content-Type':'application/json',
-                'authorization':'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImNyZWF0ZWQiOjE1MzE3NjQ1NDg4ODAsImV4cCI6MTUzMjM2OTM0OH0.4XqtCLdrFZr1Z2oswhXycGLDknw2pcuH7eoNfBVg8QuzvpONXPmqYvQc2RAq72dned1DedoGi1wZV25UcE6nIA' 
+                'Cache-Control': 'no-cache',
+                'Authorization':'Bearer '+token
             }
-        };
-        axios.get(URL,{config})
-            .then(resp => console.log("Funcionou!"));*/
+          };
 
-        
-        /*let data = {
-            description: description
-        }
-
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImNyZWF0ZWQiOjE1MzE3NjQ1NDg4ODAsImV4cCI6MTUzMjM2OTM0OH0.4XqtCLdrFZr1Z2oswhXycGLDknw2pcuH7eoNfBVg8QuzvpONXPmqYvQc2RAq72dned1DedoGi1wZV25UcE6nIA");
-        let fetchData = { 
-            method: 'GET', 
-            body: data,
-            headers: myHeaders
-        }
-        
-        fetch(URL,fetchData)
-        .then((resp) => resp.json())
-        .catch(function(data) {
-            console.log("Erro! "+data);
-        });*/
-
-
-        fetch(URL, {
-            method: 'GET',
-            headers: new Headers({
-              'Content-Type': 'application/json',
-              'authorization':'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImNyZWF0ZWQiOjE1MzE3NjQ1NDg4ODAsImV4cCI6MTUzMjM2OTM0OH0.4XqtCLdrFZr1Z2oswhXycGLDknw2pcuH7eoNfBVg8QuzvpONXPmqYvQc2RAq72dned1DedoGi1wZV25UcE6nIA'
-            })
-          }).then(function(response) {
-            console.log(response);
-          });
-        
+        axios.post(URL,body,axiosConfig)
+            .then(resp=> this.refresh());
     }
 
     render(){
@@ -68,8 +61,9 @@ export default class Todo extends Component{
                 <PageHeader name="Tarefas" small="Cadastro"/>
                 <TodoForm handleAdd={this.handleAdd} 
                     handleChange={this.handleChange}
-                    description={this.state.description}/>
-                <TodoList />
+                    description={this.state.description}/> 
+                <TodoList list={this.state.list} handleRemove={this.handleRemove}/>
+                <Pagination />
             </div>
         )
     }
