@@ -21,9 +21,10 @@ export default class Todo extends Component{
         this.refresh();
     }
 
-    refresh(){
-        
-        axios.get(`${URL}/listar?sort=-toDo`)
+    refresh(pag){
+        let pagina = `&pag=${pag}` || "";
+        let url_ = `${URL}/listar?sort=-toDo`
+        axios.get(url_)
             .then(res => {
                 let dados = res.data.data;
                 let pag = [{
@@ -67,8 +68,8 @@ export default class Todo extends Component{
             .then(resp=> this.refresh());
     }
 
-    handlePaginationChange(){
-        console.log("Teste");
+    handlePaginationChange(pag){
+        console.log("Teste: "+pag);
     }
 
     render(){

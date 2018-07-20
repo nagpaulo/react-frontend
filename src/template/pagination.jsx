@@ -26,7 +26,9 @@ export default props => {
         while (++i <= len) rows.push(i);
         return (
             rows.map(function (i) {
-                return <li className={i==pgAtual ? "page-item active" : "page-item"} key={i}><a className="page-link" href={`/#/todos?pag=${i}`}>{i}</a></li>;
+                return <li className={i==pgAtual ? "page-item active" : "page-item"} key={i}>
+                            <a className="page-link" href={`/#/todos?pag=${i}`} onClick={() => props.handlePaginationChange(i)}>{i}</a>
+                        </li>;
             })
         );
     }
