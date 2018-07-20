@@ -12,7 +12,7 @@ const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJyb2xlIjoi
 export default class Todo extends Component{
     constructor(props){
         super(props);
-        this.state = { description: '', list: []}
+        this.state = { description: '',list: [],result: []}
         this.handleChange = this.handleChange.bind(this);
         this.handleAdd = this.handleAdd.bind(this);
         this.handleRemove=this.handleRemove.bind(this);
@@ -21,8 +21,19 @@ export default class Todo extends Component{
     }
 
     refresh(){
+        
         axios.get(`${URL}/listar?sort=-toDo`)
-            .then((resp) => this.setState({...this.state, description: '', list: resp.data.data.content}));
+            .then(res => {
+                let dados = res.data.data;
+                let pag = [{
+                    "first": dados.first,
+                    "last": dados.last,
+                    "totalElements": dados.totalElements,
+                    "totalPages": dados.totalPages,
+                    "paginaAtual": this.props.location.query.pag
+                }]
+                this.setState({...this.state, description: '', list: res.data.data.content, result: pag})
+            });
     }
 
     handleRemove(todo){
@@ -39,7 +50,7 @@ export default class Todo extends Component{
             toDo: this.state.description,
             done: false,
             access: token
-         }
+        }
         let axiosConfig = {
             headers: {
                 'async': true,
@@ -63,7 +74,7 @@ export default class Todo extends Component{
                     handleChange={this.handleChange}
                     description={this.state.description}/> 
                 <TodoList list={this.state.list} handleRemove={this.handleRemove}/>
-                <Pagination />
+                <Pagination result={this.state.result}/>
             </div>
         )
     }
