@@ -22,8 +22,8 @@ export default class Todo extends Component{
     }
 
     refresh(pag){
-        let pagina = `&pag=${pag}` || "";
-        let url_ = `${URL}/listar?sort=-toDo`
+        let pagina = pag ? `&pag=${pag-1}` : "";
+        let url_ = `${URL}/listar?sort=-toDo${pagina}`
         axios.get(url_)
             .then(res => {
                 let dados = res.data.data;
@@ -32,6 +32,7 @@ export default class Todo extends Component{
                     "last": dados.last,
                     "totalElements": dados.totalElements,
                     "totalPages": dados.totalPages,
+                    "numberOfElements":dados.numberOfElements,
                     "paginaAtual": this.props.location.query.pag
                 }]
                 this.setState({...this.state, description: '', list: res.data.data.content, result: pag})
@@ -69,7 +70,7 @@ export default class Todo extends Component{
     }
 
     handlePaginationChange(pag){
-        console.log("Teste: "+pag);
+        this.refresh(pag);
     }
 
     render(){

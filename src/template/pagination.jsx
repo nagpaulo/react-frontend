@@ -4,20 +4,20 @@ export default props => {
     let dados = props.result;
     const registros = () => {
         return dados.map(todo => (
-            <label htmlFor="#" key={0}>{todo.totalElements} Registros</label>
+            <label htmlFor="#" key={0}>{`${todo.numberOfElements} de ${todo.totalElements} Registros`}</label>
         ))
     }
     const fistPagination = () =>{
         return dados.map(todo =>(
             <li className={todo.first == true ? "page-item disabled" : "page-item"} key={0}>
-                <a className="page-link" href="#">&laquo;</a>
+                <a className="page-link" href={todo.last == true ? "." : "#"}>&laquo;</a>
             </li>
         ))
     }
     const lastPagination = () =>{
         return dados.map(todo=>(
-            <li className={"page-item "+todo.last == true ? "disabled" : ""} key={0}>
-                <a className="page-link" href="#">&raquo;</a>
+            <li className={todo.last == true ? "page-item disabled" : "page-item"} key={0}>
+                <a className="page-link" href={todo.last == true ? "#" : `/#/todos?pag=${todo.totalPages}`} onClick={() => props.handlePaginationChange(todo.totalPages)}>&raquo;</a>
             </li>
         ))
     }
