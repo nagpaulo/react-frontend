@@ -16,6 +16,7 @@ export default class Todo extends Component{
         this.handleChange = this.handleChange.bind(this);
         this.handleAdd = this.handleAdd.bind(this);
         this.handleRemove=this.handleRemove.bind(this);
+        this.handlePaginationChange=this.handlePaginationChange.bind(this);
 
         this.refresh();
     }
@@ -66,6 +67,10 @@ export default class Todo extends Component{
             .then(resp=> this.refresh());
     }
 
+    handlePaginationChange(){
+        console.log("Teste");
+    }
+
     render(){
         return (
             <div>
@@ -74,7 +79,7 @@ export default class Todo extends Component{
                     handleChange={this.handleChange}
                     description={this.state.description}/> 
                 <TodoList list={this.state.list} handleRemove={this.handleRemove}/>
-                <Pagination result={this.state.result}/>
+                <Pagination result={this.state.result} handlePaginationChange={this.handlePaginationChange}/>
             </div>
         )
     }
