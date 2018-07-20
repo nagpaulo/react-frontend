@@ -19,14 +19,20 @@ export default class Todo extends Component{
         this.handlePaginationChange=this.handlePaginationChange.bind(this);
         this.handleMarkAsDone=this.handleMarkAsDone.bind(this);
         this.handleMarkAsPending=this.handleMarkAsPending.bind(this);
+        this.handleSearch=this.handleSearch.bind(this);
 
         this.refresh();
     }
 
-    refresh(pag){
-        let pagina = pag ? `&pag=${pag-1}` : "";
-        let url_ = `${URL}/listar?sort=-toDo${pagina}`
-        axios.get(url_)
+    refresh(pag, description = ''){
+        this.getRefresh(pag,description);
+    }
+
+    getRefresh(pag,description){
+        if(!description){
+            let pagina = pag ? `&pag=${pag-1}` : "";
+            let url_ = `${URL}/listar?sort=-toDo${pagina}`;
+            axios.get(url_)
             .then(res => {
                 let dados = res.data.data;
                 let pag = [{
@@ -37,13 +43,29 @@ export default class Todo extends Component{
                     "numberOfElements":dados.numberOfElements,
                     "paginaAtual": this.props.location.query.pag
                 }]
-                this.setState({...this.state, description: '', list: res.data.data.content, result: pag})
+                this.setState({...this.state, description, list: res.data.data.content, result: pag})
             });
+        }else{
+            let url_ = `${URL}/listar?sort=-toDo`;
+            axios.post(url_,{toDo:this.state.description})
+            .then(res => {
+                let dados = res.data.data;
+                let pag = [{
+                    "first": dados.first,
+                    "last": dados.last,
+                    "totalElements": dados.totalElements,
+                    "totalPages": dados.totalPages,
+                    "numberOfElements":dados.numberOfElements,
+                    "paginaAtual": this.props.location.query.pag
+                }]
+                this.setState({...this.state, description, list: res.data.data.content, result: this.props.location.query.pag})
+            });
+        }
     }
 
     handleRemove(todo){
         axios.delete(`${URL}/${todo.id}`)
-            .then(resp => this.refresh());
+            .then(resp => this.refresh(this.props.location.query.pag));
     }
 
     handleChange(e){
@@ -68,7 +90,7 @@ export default class Todo extends Component{
           };
 
         axios.post(URL,body,axiosConfig)
-            .then(resp=> this.refresh());
+            .then(resp=> this.refresh(this.props.location.query.pag));
     }
 
     handlePaginationChange(pag){
@@ -77,12 +99,20 @@ export default class Todo extends Component{
 
     handleMarkAsDone(todo){
         axios.put(`${URL}/${todo.id}`, {...todo,"done": true})
-            .then(resp => this.refresh());
+            .then(resp => this.refresh(this.props.location.query.pag));
     }
 
     handleMarkAsPending(todo){
         axios.put(`${URL}/${todo.id}`, {...todo, done:false})
-            .then(resp => this.refresh());
+            .then(resp => this.refresh(this.props.location.query.pag));
+    }
+
+    handleSearch(){
+        let url_ = `${URL}/listar?sort=-toDo`;
+        this.refresh(this.props.location.query.pag)
+        // axios.post(url_,{toDo:this.state.description})
+        //     .then(resp => this.refresh(this.props.location.query.pag));
+            
     }
 
     render(){
@@ -92,7 +122,8 @@ export default class Todo extends Component{
                 <TodoForm 
                     handleAdd={this.handleAdd} 
                     handleChange={this.handleChange}
-                    description={this.state.description}/> 
+                    description={this.state.description}
+                    handleSearch={this.handleSearch}/> 
                 <TodoList 
                     list={this.state.list} 
                     handleRemove={this.handleRemove}
