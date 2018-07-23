@@ -29,8 +29,8 @@ export default class Todo extends Component{
     }
 
     getRefresh(pag,description){
+        let pagina = pag ? `&pag=${pag-1}` : "";
         if(!description){
-            let pagina = pag ? `&pag=${pag-1}` : "";
             let url_ = `${URL}/listar?sort=-toDo${pagina}`;
             axios.get(url_)
             .then(res => {
@@ -47,7 +47,7 @@ export default class Todo extends Component{
             });
         }else{
             let url_ = `${URL}/listar?sort=-toDo`;
-            axios.post(url_,{toDo:this.state.description})
+            axios.post(url_,{toDo:description})
             .then(res => {
                 let dados = res.data.data;
                 let pag = [{
@@ -56,9 +56,10 @@ export default class Todo extends Component{
                     "totalElements": dados.totalElements,
                     "totalPages": dados.totalPages,
                     "numberOfElements":dados.numberOfElements,
-                    "paginaAtual": this.props.location.query.pag
+                    "paginaAtual": this.props.location.query.pag,
+                    "description": description
                 }]
-                this.setState({...this.state, description, list: res.data.data.content, result: this.props.location.query.pag})
+                this.setState({...this.state, description, list: res.data.data.content, result: pag})
             });
         }
     }
@@ -93,8 +94,8 @@ export default class Todo extends Component{
             .then(resp=> this.refresh(this.props.location.query.pag));
     }
 
-    handlePaginationChange(pag){
-        this.refresh(pag);
+    handlePaginationChange(pag,description=''){
+        this.refresh(pag,description);
     }
 
     handleMarkAsDone(todo){
@@ -109,7 +110,7 @@ export default class Todo extends Component{
 
     handleSearch(){
         let url_ = `${URL}/listar?sort=-toDo`;
-        this.refresh(this.props.location.query.pag)
+        this.refresh(this.props.location.query.pag,this.state.description)
         // axios.post(url_,{toDo:this.state.description})
         //     .then(resp => this.refresh(this.props.location.query.pag));
             
