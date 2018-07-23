@@ -20,6 +20,7 @@ export default class Todo extends Component{
         this.handleMarkAsDone=this.handleMarkAsDone.bind(this);
         this.handleMarkAsPending=this.handleMarkAsPending.bind(this);
         this.handleSearch=this.handleSearch.bind(this);
+        this.handleClear=this.handleClear.bind(this);
 
         this.refresh();
     }
@@ -66,7 +67,7 @@ export default class Todo extends Component{
 
     handleRemove(todo){
         axios.delete(`${URL}/${todo.id}`)
-            .then(resp => this.refresh(this.props.location.query.pag));
+            .then(resp => this.refresh(this.props.location.query.pag,this.state.description));
     }
 
     handleChange(e){
@@ -91,7 +92,7 @@ export default class Todo extends Component{
           };
 
         axios.post(URL,body,axiosConfig)
-            .then(resp=> this.refresh(this.props.location.query.pag));
+            .then(resp=> this.refresh(this.props.location.query.pag,this.state.description));
     }
 
     handlePaginationChange(pag,description=''){
@@ -100,20 +101,21 @@ export default class Todo extends Component{
 
     handleMarkAsDone(todo){
         axios.put(`${URL}/${todo.id}`, {...todo,"done": true})
-            .then(resp => this.refresh(this.props.location.query.pag));
+            .then(resp => this.refresh(this.props.location.query.pag,this.state.description));
     }
 
     handleMarkAsPending(todo){
         axios.put(`${URL}/${todo.id}`, {...todo, done:false})
-            .then(resp => this.refresh(this.props.location.query.pag));
+            .then(resp => this.refresh(this.props.location.query.pag,this.state.description));
     }
 
     handleSearch(){
         let url_ = `${URL}/listar?sort=-toDo`;
-        this.refresh(this.props.location.query.pag,this.state.description)
-        // axios.post(url_,{toDo:this.state.description})
-        //     .then(resp => this.refresh(this.props.location.query.pag));
-            
+        this.refresh(this.props.location.query.pag,this.state.description);
+    }
+
+    handleClear(){
+        this.refresh(this.props.location.query.pag);
     }
 
     render(){
@@ -124,7 +126,8 @@ export default class Todo extends Component{
                     handleAdd={this.handleAdd} 
                     handleChange={this.handleChange}
                     description={this.state.description}
-                    handleSearch={this.handleSearch}/> 
+                    handleSearch={this.handleSearch}
+                    handleClear={this.handleClear}/> 
                 <TodoList 
                     list={this.state.list} 
                     handleRemove={this.handleRemove}
