@@ -115,7 +115,7 @@ export default class Todo extends Component{
     }
 
     handleClear(){
-        this.refresh(this.props.location.query.pag);
+        this.refresh();
     }
 
     render(){
