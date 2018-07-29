@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import IconButton from '../template/IconButton';
+import IconButton from '../template/iconButton';
 
 const TodoList = props => {
     const renderRows = () => {

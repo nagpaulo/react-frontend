@@ -3,11 +3,11 @@ import axios from 'axios';
 
 import PageHeader from '../template/pageHeader';
 import Pagination from '../template/pagination';
-import TodoForm from '../todo/todoForm';
-import TodoList from '../todo/todoList';
+import TodoForm from './todoForm';
+import TodoList from './todoList';
 
 const URL = "http://localhost:8080/api/todo";
-const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImNyZWF0ZWQiOjE1MzE5MzMyNjExNzEsImV4cCI6MTUzMjUzODA2MX0.lz9ohlBk_xPYdUbDhUyLGQfjL_ZYYGOcXtiCHL4j3TlYVr2_I16XVOcoQW32NcY_Wq8GvSZi47rzs_nfUO_dvw";
+const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImNyZWF0ZWQiOjE1MzI4OTU4OTgyNTgsImV4cCI6MTUzMzUwMDY5OH0.X3bLqv0oPvkqvYsjbt7I674l38-Aqa1qb0SUUDks61nJ8EAtNmKUMgJxEckb1tz1Q3b5K7GE0bJjz23lY-D5BQ";
 
 export default class Todo extends Component{
     constructor(props){
