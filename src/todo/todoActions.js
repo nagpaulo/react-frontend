@@ -9,22 +9,32 @@ export const changeDescription = event => ({
     payload: event.target.value
 });
 
-export const search = (pag,description) => {
+export const search = (pag) => {
+
     let pagina = pag ? `&pag=${pag-1}` : "";
-    let url_ = `${URL}/listar?sort=-toDo${pagina}`;
     let request;
+    let axiosConfig = {
+        headers: {
+            'async': true,
+            'crossDomain': true,
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type':'application/json',
+            'Cache-Control': 'no-cache',
+            'Authorization':'Bearer '+token
+        }
+    };
 
-    if(!description){
-        request = axios.get(url_)
-    }else{
-        let url_ = `${URL}/listar?sort=-toDo`;
-        axios.post(url_,{toDo:description})
-        request = axios.post(url_)
-    }
-
-    return {
-        type: 'TODO_SEARCHED',
-        payload: request
+    return (dispatch, getState) => {
+        const description = getState().todo.description;
+        if(!description){
+            let url_ = `${URL}/listar?sort=-toDo${pagina}`;
+            request = axios.get(url_)
+                .then( resp => dispatch({ type: 'TODO_SEARCHED', payload: resp.data.data.content }))
+        }else{
+            let url_ = `${URL}/listar?sort=-toDo`;
+            request = axios.post(url_,{toDo:description},axiosConfig)
+                .then( resp => dispatch({ type: 'TODO_SEARCHED', payload: resp.data.data.content }))
+        }
     }
 }
 
@@ -73,5 +83,5 @@ export const remove = (todo) => {
 }
 
 export const clear = () => {
-    return { type: 'TODO_CLEAR' }
+    return [{ type: 'TODO_CLEAR'},search()]
 }
